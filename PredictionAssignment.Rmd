@@ -30,9 +30,34 @@ trainNAs
 #Number of variables with NAs in test set
 testNAs
 ```
-The results show that there are many columns with close to or only NA data in the data set.  The next step is to remove these columns from the data
+
+The results show that there are many columns with close to or only NA data in the data set.  The next step is to remove these columns from the data, alnog with removal of the following non-numeric columns:
+Initial Row Index Column, user_name, raw_timestamp_part_1, raw_timestamp_part_2, cvtd_timestamp, new_window, & num_window
+
 ```{r}
 trainNAColumns <- trainCols >= 19216
 testNAColumns <- testCols >= 20
 trainPro <- train[!trainNAColumns]
 testPro <- test[!testNAColumns]
+trainPro <- trainPro[, -(1:7)] 
+testPro <- testPro[, -(1:7)]
+```
+
+Now that the training and test set data is correct, we go ahead and create a validation set from our training set.
+
+```{r}
+library(caret)
+inTrain <- createDataPartition(y=trainPro$classe, p=0.7, list=FALSE)
+training <- trainPro[inTrain,]
+validation <- trainPro[inTrain,]
+```
+
+##Model
+Here we will select the appropriate model for predicing the classe based on the features of the training data.
+
+###Random Forest
+We will use the Random Forest technique to derive our model
+```{r}
+modFit <- train(classe ~ ., data=training, method="rf",prox=TRUE)
+
+
