@@ -1,1 +1,38 @@
-
+##Data Load, Processing, and Exploration
+###Load Data 
+Perform data download and initial data load of the test and training data
+```{r, cache=TRUE}
+trainURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv"
+trainFile <- "pml-training.csv"
+testURL <- "https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv"
+testFile <- "pml-testing.csv"
+download.file(trainURL, trainFile, method="curl")
+download.file(testURL, testFile, method="curl")
+train <- read.csv(trainFile,na.strings=c("NA",""))
+test <-read.csv(testFile,na.strings=c("NA",""))
+```
+###Initial Data Exploration
+```{r}
+dim(test)
+dim(train)
+train[1:5,1:10]
+str(train)
+```
+###Data Preperation
+```{r}
+#Count the number of NAs in traiing and test set
+trainCols <- colSums(is.na(train))
+testCols <- colSums(is.na(test))
+trainNAs <- table(trainCols)
+testNAs <- table(testCols)
+#Number of variables with NAs in train set
+trainNAs
+#Number of variables with NAs in test set
+testNAs
+```
+The results show that there are many columns with close to or only NA data in the data set.  The next step is to remove these columns from the data
+```{r}
+trainNAColumns <- trainCols >= 19216
+testNAColumns <- testCols >= 20
+trainPro <- train[!trainNAColumns]
+testPro <- test[!testNAColumns]
