@@ -1,3 +1,10 @@
+#Prediction Assignment
+##Introduction
+
+Using devices such as Jawbone Up, Nike FuelBand, and Fitbit it is now possible to collect a large amount of data about personal activity relatively inexpensively. These type of devices are part of the quantified self movement – a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks. One thing that people regularly do is quantify how much of a particular activity they do, but they rarely quantify how well they do it. In this project, your goal will be to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants. They were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here 
+
+http://groupware.les.inf.puc-rio.br/har
+
 ##Data Load, Processing, and Exploration
 ###Load Data 
 Perform data download and initial data load of the test and training data
@@ -12,6 +19,7 @@ train <- read.csv(trainFile,na.strings=c("NA",""))
 test <-read.csv(testFile,na.strings=c("NA",""))
 ```
 ###Initial Data Exploration
+Get a sense of the number of rows, variables, and types of data
 ```{r}
 dim(test)
 dim(train)
@@ -68,5 +76,5 @@ pml_write_files = function(x){
     write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
   }
 }
-pml_write_files(as.character(predanswers))
+pml_write_files(as.character(prediction))
 ```
