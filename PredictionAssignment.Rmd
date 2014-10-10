@@ -57,6 +57,7 @@ Here we will select the appropriate model for predicing the classe based on the 
 ###Random Forest
 We will use the Random Forest technique to derive our model with a 4 k-fold Cross Validation.  Because we are doing k-fold, we do not need to split out the training data to perform an out of sample error as the 4 k-fold Cross Validation feature will do this for us.
 ```{r}
+library(caret)
 modFit <- train(as.factor(classe) ~ ., data=trainPro, method="rf",prox=TRUE, 
         trControl = trainControl(method = "cv", number = 4, allowParallel = TRUE))
 modFit
