@@ -43,21 +43,30 @@ trainPro <- trainPro[, -(1:7)]
 testPro <- testPro[, -(1:7)]
 ```
 
-Now that the training and test set data is correct, we go ahead and create a validation set from our training set.
-
-```{r}
-library(caret)
-inTrain <- createDataPartition(y=trainPro$classe, p=0.7, list=FALSE)
-training <- trainPro[inTrain,]
-validation <- trainPro[inTrain,]
-```
-
 ##Model
 Here we will select the appropriate model for predicing the classe based on the features of the training data.
 
 ###Random Forest
-We will use the Random Forest technique to derive our model
+We will use the Random Forest technique to derive our model with a 4 k-fold Cross Validation.  Because we are doing k-fold, we do not need to split out the training data to perform an out of sample error as the 4 k-fold Cross Validation feature will do this for us.
 ```{r}
-modFit <- train(classe ~ ., data=training, method="rf",prox=TRUE)
+modFit <- train(as.factor(classe) ~ ., data=trainPro, method="rf",prox=TRUE, 
+        trControl = trainControl(method = "cv", number = 4, allowParallel = TRUE))
+modFit
+```
+Based on our cross validation result, using the mtry=2 model, with an accuracy of 99.4%, we have out of sample error rate of .6%, which is very good.  
 
+##Results
+```{r}
+prediction <- predict(modFit, testPro) 
+prediction
 
+#Function to write output files for programming assignment
+pml_write_files = function(x){
+  n = length(x)
+  for(i in 1:n){
+    filename = paste0("problem_id_",i,".txt")
+    write.table(x[i],file=filename,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+}
+pml_write_files(as.character(predanswers))
+```
